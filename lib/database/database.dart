@@ -59,6 +59,10 @@ class DatabaseService {
         .map((_transactionListFromSnapshot));
   }
 
+  Future<void> addTransaction({@required Map details}) async {
+    transactionsCollection.add(details);
+  }
+
   Future<bool> isUserDocExists() async {
     User user = auth.currentUser;
     DocumentSnapshot userDoc = await userCollection.doc(user.uid).get();

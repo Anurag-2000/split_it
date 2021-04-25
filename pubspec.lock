@@ -142,6 +142,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fluttertoast:
+    dependency: "direct main"
+    description:
+      name: fluttertoast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.1"
   http_parser:
     dependency: transitive
     description:
@@ -233,6 +240,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
+  searchable_dropdown:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: bad9412c3c27d007ca901813138bbd7cfb4cc90b
+      url: "https://github.com/matheusfajardo/searchable_dropdown"
+    source: git
+    version: "1.1.4"
   sky_engine:
     dependency: transitive
     description: flutter

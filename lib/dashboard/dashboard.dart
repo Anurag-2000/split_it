@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:split_it/view/contacts_page.dart';
 import 'package:split_it/view/home_page.dart';
 import 'package:split_it/view/transactions_page.dart';
+import 'package:split_it/widgets/bottom_sheet.dart';
 
 class Dashboard extends StatefulWidget {
   final String uid;
@@ -41,17 +42,9 @@ class _DashboardState extends State<Dashboard> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
+            isScrollControlled: true,
             context: context,
-            builder: (context) => Container(
-              height: 300,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-                // color: Colors.black,
-              ),
-            ),
+            builder: (context) => CustomBottomSheet(),
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
