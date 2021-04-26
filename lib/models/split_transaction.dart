@@ -9,6 +9,7 @@ class STransaction {
   String description;
   List details;
   String creator;
+  int settleCount;
 
   STransaction({
     this.id,
@@ -19,6 +20,7 @@ class STransaction {
     this.description,
     this.details,
     this.creator,
+    this.settleCount,
   });
 
   factory STransaction.empty() => STransaction();
@@ -31,7 +33,8 @@ class STransaction {
       'members': members,
       'description': description,
       'creator': creator,
-      'details': details
+      'details': details,
+      'settleCount': settleCount,
     };
   }
 
@@ -45,6 +48,7 @@ class STransaction {
     this.description = data['description'] ?? "";
     this.creator = data['creator'] ?? "";
     this.details = data['details'] ?? [];
+    this.settleCount = data['settleCount'] ?? 0;
   }
 
   List<MemberDetails> getMemberDetails() {
@@ -58,6 +62,19 @@ class STransaction {
           ),
     );
     return memberDetails;
+  }
+}
+
+extension ExtendedIterable<E> on Iterable<E> {
+  /// Like Iterable<T>.map but callback have index as second argument
+  Iterable<T> mapIndexed<T>(T Function(E e, int i) f) {
+    var i = 0;
+    return map((e) => f(e, i++));
+  }
+
+  void forEachIndexed(void Function(E e, int i) f) {
+    var i = 0;
+    forEach((e) => f(e, i++));
   }
 }
 

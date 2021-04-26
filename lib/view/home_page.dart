@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:split_it/constants.dart';
-import 'package:split_it/login/loginPage.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -14,151 +12,156 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       color: kGrey1,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(icon: Icon(Icons.menu), onPressed: () {}),
-              Text('Split It',
-                  style: TextStyle(
-                      color: Color(0xff242424),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 21)),
-              Container(
-                margin: EdgeInsets.only(left: 5),
-                height: 40,
-                width: 40,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage(
-                      "assets/images/gabriel.jpg",
-                    ),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-            child: Text('Your Groups',
-                style: TextStyle(
-                    color: kMidnight,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18)),
-          ),
-          Flexible(
-            child: Container(
-              height: 50,
-              child: ListView(
-                padding: EdgeInsets.zero,
-                scrollDirection: Axis.horizontal,
-                children: [
-                  GroupCard(
-                    color: kGreen,
-                    text: "Flat Mates",
-                    value: 12000.00,
-                  ),
-                  GroupCard(
-                    color: kGreen,
-                    text: "Movie",
-                    value: 12000.00,
-                  ),
-                  GroupCard(
-                    color: kGreen,
-                    text: "Trip",
-                    value: 12000.00,
-                  ),
-                  GroupCard(
-                    color: kGreen,
-                    text: "Metro",
-                    value: 12000.00,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-            child: Text('Overview Report',
-                style: TextStyle(
-                    color: kMidnight,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18)),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              StatCard(
-                color: kGreen,
-                image: "assets/images/increment.png",
-                text: "Income",
-                value: 12000.00,
-              ),
-              StatCard(
-                color: kRed,
-                image: "assets/images/decrement.png",
-                text: "Expense",
-                value: 7000.00,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-            child: Row(
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Latest Transactions',
-                  style: TextStyle(
-                    color: kMidnight,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
+                IconButton(icon: Icon(Icons.menu), onPressed: () {}),
+                Text('Split It',
+                    style: TextStyle(
+                        color: Color(0xff242424),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 21)),
+                Container(
+                  margin: EdgeInsets.only(left: 5),
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage(
+                        "assets/images/gabriel.jpg",
+                      ),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-                TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(primary: kBlue1),
-                    child: Row(
-                      children: [Text("See all"), Icon(Icons.navigate_next)],
-                    ))
               ],
             ),
-          ),
-          Expanded(
-            child: Container(
-              height: 400,
-              child: ListView(
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+              child: Text('Your Groups',
+                  style: TextStyle(
+                      color: kMidnight,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18)),
+            ),
+            Flexible(
+              child: Container(
+                height: 50,
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    GroupCard(
+                      color: kGreen,
+                      text: "Flat Mates",
+                      value: 12000.00,
+                    ),
+                    GroupCard(
+                      color: kGreen,
+                      text: "Movie",
+                      value: 12000.00,
+                    ),
+                    GroupCard(
+                      color: kGreen,
+                      text: "Trip",
+                      value: 12000.00,
+                    ),
+                    GroupCard(
+                      color: kGreen,
+                      text: "Metro",
+                      value: 12000.00,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+              child: Text('Overview Report',
+                  style: TextStyle(
+                      color: kMidnight,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18)),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                StatCard(
+                  color: kGreen,
+                  image: "assets/images/increment.png",
+                  text: "Income",
+                  value: 12000.00,
+                ),
+                StatCard(
+                  color: kRed,
+                  image: "assets/images/decrement.png",
+                  text: "Expense",
+                  value: 7000.00,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TransactionCard(
-                      name: "Books", date: "Sat, 15 Mar 2021", price: "750"),
-                  TransactionCard(
-                      name: "Movie", date: "Fri, 11 Mar 2021", price: "450"),
-                  TransactionCard(
-                      name: "Food", date: "Tue, 28 Feb 2021", price: "900"),
-                  TransactionCard(
-                      name: "Outing", date: "Sat, 15 Mar 2021", price: "1200"),
-                  TransactionCard(
-                      name: "Books", date: "Sat, 15 Mar 2021", price: "750"),
+                  Text(
+                    'Latest Transactions',
+                    style: TextStyle(
+                      color: kMidnight,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                    ),
+                  ),
+                  TextButton(
+                      onPressed: () {},
+                      style: TextButton.styleFrom(primary: kBlue1),
+                      child: Row(
+                        children: [Text("See all"), Icon(Icons.navigate_next)],
+                      ))
                 ],
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: Container(
+                height: 400,
+                child: ListView(
+                  children: [
+                    TransactionCard(
+                        name: "Books", date: "Sat, 15 Mar 2021", price: "750"),
+                    TransactionCard(
+                        name: "Movie", date: "Fri, 11 Mar 2021", price: "450"),
+                    TransactionCard(
+                        name: "Food", date: "Tue, 28 Feb 2021", price: "900"),
+                    TransactionCard(
+                        name: "Outing",
+                        date: "Sat, 15 Mar 2021",
+                        price: "1200"),
+                    TransactionCard(
+                        name: "Books", date: "Sat, 15 Mar 2021", price: "750"),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

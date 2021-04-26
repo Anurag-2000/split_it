@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:split_it/constants.dart';
 import 'package:split_it/dashboard/dashboard.dart';
 import 'package:split_it/database/database.dart';
 import 'package:split_it/login/initial.dart';
@@ -17,8 +16,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.black, // navigation bar color
-    statusBarColor: Colors.black, // status bar color
+    systemNavigationBarColor: Colors.black,
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
   ));
   await Firebase.initializeApp();
   runApp(MyApp());

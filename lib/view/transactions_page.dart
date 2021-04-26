@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:split_it/constants.dart';
 import 'package:split_it/database/database.dart';
 import 'package:split_it/models/contactList.dart';
-import 'package:split_it/models/transaction.dart';
+import 'package:split_it/models/split_transaction.dart';
 import 'package:split_it/models/userData.dart';
 
 class TransactionList extends StatelessWidget {
@@ -17,43 +17,45 @@ class TransactionList extends StatelessWidget {
       padding: EdgeInsets.all(15),
       height: MediaQuery.of(context).size.height,
       color: kGrey1,
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              Text('Split Transactions',
-                  style: TextStyle(
-                      color: kMidnight,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 21)),
-              SizedBox(
-                height: 15,
-              ),
-              Expanded(
-                child: StreamBuilder<List<STransaction>>(
-                  stream: DatabaseService().getTransactions(userDoc.id),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) return Container();
-                    final transactions = snapshot.data;
-                    return ListView(
-                      children: [
-                        ...transactions.map((sTransaction) {
-                          List<MemberDetails> memberDetails =
-                              sTransaction.getMemberDetails();
-
-                          return TransactionTile(
-                            memberDetails: memberDetails,
-                            sTransaction: sTransaction,
-                          );
-                        })
-                      ],
-                    );
-                  },
+      child: SafeArea(
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Text('Split Transactions',
+                    style: TextStyle(
+                        color: kMidnight,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 21)),
+                SizedBox(
+                  height: 15,
                 ),
-              ),
-            ],
-          ),
-        ],
+                Expanded(
+                  child: StreamBuilder<List<STransaction>>(
+                    stream: DatabaseService().getTransactions(userDoc.id),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) return Container();
+                      final transactions = snapshot.data;
+                      transactions.sort((t1, t2) => t2.date.compareTo(t1.date));
+                      return ListView(
+                        children: [
+                          ...transactions.map((sTransaction) {
+                            List<MemberDetails> memberDetails =
+                                sTransaction.getMemberDetails();
+                            return TransactionTile(
+                              memberDetails: memberDetails,
+                              sTransaction: sTransaction,
+                            );
+                          })
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -82,7 +84,7 @@ class _TransactionTileState extends State<TransactionTile> {
     String getContactName(String uid) {
       String name = "";
 
-      if (uid == userDoc.id) return name;
+      if (uid == userDoc.id) return null;
 
       if (contactList.contacts != null && contactList.contacts.isNotEmpty) {
         try {
@@ -94,6 +96,22 @@ class _TransactionTileState extends State<TransactionTile> {
       }
 
       return name;
+    }
+
+    String subTitle =
+        "Created by ${getContactName(widget.sTransaction.creator)}";
+    bool isCreator = widget.sTransaction.creator == userDoc.id;
+
+    if (isCreator) {
+      double owes =
+          widget.sTransaction.amount / widget.sTransaction.members.length;
+      print(owes);
+      double owedAmount = owes *
+          (widget.sTransaction.members.length -
+              widget.sTransaction.settleCount -
+              1);
+
+      subTitle = 'Your are owed \u{20B9} ${owedAmount.toStringAsFixed(2)}';
     }
 
     return Container(
@@ -114,9 +132,20 @@ class _TransactionTileState extends State<TransactionTile> {
           unselectedWidgetColor: Colors.black,
         ),
         child: ExpansionTile(
-          title: Text(widget.sTransaction.title),
-          subtitle:
-              Text('\u{20B9} ${widget.sTransaction.amount.toStringAsFixed(2)}'),
+          title: Text(
+            widget.sTransaction.title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          subtitle: Text(
+            subTitle,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
           childrenPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           children: [
             Column(
@@ -128,22 +157,14 @@ class _TransactionTileState extends State<TransactionTile> {
                 SizedBox(
                   height: 9,
                 ),
-                ...widget.memberDetails.map(
-                  (memberDetail) {
+                ...widget.memberDetails.mapIndexed(
+                  (memberDetail, index) {
                     String name = getContactName(memberDetail.user);
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 3.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: Text(
-                                  name.isEmpty ? memberDetail.mobile : name)),
-                          memberDetail.paid
-                              ? Text('Settled Up!!')
-                              : Text(
-                                  '\u{20B9} ${memberDetail.owes.toStringAsFixed(2)}'),
-                        ],
-                      ),
+                    return MemberDetail(
+                      transaction: widget.sTransaction,
+                      name: name,
+                      index: index,
+                      memberDetail: memberDetail,
                     );
                   },
                 )
@@ -151,6 +172,86 @@ class _TransactionTileState extends State<TransactionTile> {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class MemberDetail extends StatelessWidget {
+  const MemberDetail({
+    Key key,
+    @required this.name,
+    @required this.memberDetail,
+    @required this.index,
+    @required this.transaction,
+  }) : super(key: key);
+
+  final String name;
+  final MemberDetails memberDetail;
+  final int index;
+  final STransaction transaction;
+  @override
+  Widget build(BuildContext context) {
+    bool isUserDetail = name == null;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 7.0),
+      child: Row(
+        children: [
+          Expanded(
+              child: Text(isUserDetail
+                  ? "You"
+                  : name.isEmpty
+                      ? memberDetail.mobile
+                      : name)),
+          memberDetail.paid
+              ? Text('Settled Up!!')
+              : Column(
+                  children: [
+                    Text('\u{20B9} ${memberDetail.owes.toStringAsFixed(2)}'),
+                    isUserDetail
+                        ? InkWell(
+                            onTap: () {
+                              print(transaction.details);
+                              print(transaction.details[index]);
+                              transaction.details.removeAt(index);
+                              memberDetail.paid = true;
+                              transaction.details
+                                  .insert(index, memberDetail.toMap());
+                              print(transaction.details);
+
+                              DatabaseService().settleIt(
+                                  transactionId: transaction.id,
+                                  details: transaction.details);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 5),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                gradient: LinearGradient(
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                    colors: [
+                                      kBlue1,
+                                      kBlue2,
+                                    ]),
+                              ),
+                              child: Text(
+                                "Settle",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          )
+                        : SizedBox()
+                  ],
+                ),
+        ],
       ),
     );
   }

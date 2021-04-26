@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:split_it/models/contact.dart';
-import 'package:split_it/models/transaction.dart';
+import 'package:split_it/models/split_transaction.dart';
 import 'package:split_it/models/userData.dart';
 import 'package:intl/intl.dart';
 import 'package:contacts_service/contacts_service.dart';
@@ -132,5 +132,16 @@ class DatabaseService {
         await [Permission.contacts].request();
     print(statuses[Permission.contacts]);
     return null;
+  }
+
+  Future<void> settleIt(
+      {@required String transactionId, @required List details}) async {
+    await transactionsCollection
+        .doc(transactionId)
+        .update({"details": details});
+
+    await transactionsCollection
+        .doc(transactionId)
+        .update({"settleCount": FieldValue.increment(1)});
   }
 }

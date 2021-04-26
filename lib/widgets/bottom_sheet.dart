@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'package:split_it/constants.dart';
 import 'package:split_it/database/database.dart';
 import 'package:split_it/models/contact.dart';
 import 'package:split_it/models/contactList.dart';
-import 'package:split_it/models/transaction.dart';
+import 'package:split_it/models/split_transaction.dart';
 import 'package:split_it/models/userData.dart';
 
 class CustomBottomSheet extends StatefulWidget {
@@ -19,8 +18,6 @@ class CustomBottomSheet extends StatefulWidget {
 }
 
 class _CustomBottomSheetState extends State<CustomBottomSheet> {
-  List details = [];
-  List members = [];
   TextEditingController titleCtrl = TextEditingController();
   TextEditingController descriptionCtrl = TextEditingController();
   TextEditingController amountCtrl = TextEditingController(text: "0.00");
@@ -177,7 +174,8 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
 
                 print(owedAmount);
 
-                details = [];
+                List details = [];
+                List members = [];
 
                 contactList.contacts.forEachIndexed((contact, i) {
                   if (isCheckedList[i])
@@ -245,19 +243,6 @@ void toast({String text}) {
     textColor: Colors.white,
     fontSize: 16.0,
   );
-}
-
-extension ExtendedIterable<E> on Iterable<E> {
-  /// Like Iterable<T>.map but callback have index as second argument
-  Iterable<T> mapIndexed<T>(T Function(E e, int i) f) {
-    var i = 0;
-    return map((e) => f(e, i++));
-  }
-
-  void forEachIndexed(void Function(E e, int i) f) {
-    var i = 0;
-    forEach((e) => f(e, i++));
-  }
 }
 // SearchableDropdown.single(
 //                 hint: DropdownMenuItem<String>(
