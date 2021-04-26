@@ -4,19 +4,21 @@ class PTransaction {
   String id;
   String name;
   String amount;
-  String date;
-  int isExpense;
+  int date;
+  String category;
+  bool isExpense;
 
-  PTransaction.withID(
-      this.id, this.name, this.amount, this.date, this.isExpense);
+  PTransaction(
+      {this.name, this.amount, this.date, this.category, this.isExpense});
 
-  PTransaction();
+  factory PTransaction.empty() => PTransaction();
 
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'amount': amount,
       'date': date,
+      'category': category ?? 'other',
       'isExpense': isExpense,
     };
   }

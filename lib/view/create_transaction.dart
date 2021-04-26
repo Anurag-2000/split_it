@@ -54,10 +54,10 @@ class _CreateTransactionState extends State<CreateTransaction> {
                       setState(() {
                         pageIndex = 0;
                       });
-                      pageController.animateToPage(
+                      pageController.jumpToPage(
                         0,
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.easeOut,
+                        // duration: Duration(milliseconds: 500),
+                        // curve: Curves.easeOut,
                       );
                     },
                     child: Container(
@@ -81,10 +81,10 @@ class _CreateTransactionState extends State<CreateTransaction> {
                         pageIndex = 1;
                       });
                       print(pageIndex);
-                      pageController.animateToPage(
+                      pageController.jumpToPage(
                         1,
-                        duration: Duration(milliseconds: 100),
-                        curve: Curves.easeOut,
+                        // duration: Duration(milliseconds: 100),
+                        // curve: Curves.easeIn,
                       );
                     },
                     child: Container(
