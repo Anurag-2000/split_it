@@ -16,7 +16,7 @@ const kPurpleLight = Color(0xffA9A6C7);
 
 const kMidnight = Color(0xff000033);
 
-const kGreen = Color(0xFF1DE9B6);
-const kRed = Color(0xFFFF8A80);
+const kGreen = Color(0xFF00BFA5);
+const kRed = Colors.redAccent;
 
 const kFont1 = 'PT-Sans';

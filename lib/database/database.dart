@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:split_it/models/contact.dart';
+import 'package:split_it/models/personal_transaction.dart';
 import 'package:split_it/models/split_transaction.dart';
 import 'package:split_it/models/userData.dart';
 import 'package:intl/intl.dart';
@@ -20,18 +21,32 @@ class DatabaseService {
   final CollectionReference transactionsCollection =
       FirebaseFirestore.instance.collection('transactions');
 
+  List<PTransaction> _personaltransactionListFromSnapshot(
+      QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return PTransaction.fromMapObject(
+        id: doc.id,
+        data: doc.data(),
+      );
+    }).toList();
+  }
+
   Stream<UserData> getUserDataStream() async* {
     await for (var firebaseUser in auth.authStateChanges()) {
       if (firebaseUser != null) {
         final id = firebaseUser.uid;
         final ref = userCollection.doc(id);
+        final transactionsRef = await ref.collection('transactions').get();
+        final List<PTransaction> listTransactions =
+            _personaltransactionListFromSnapshot(transactionsRef);
         yield* ref.snapshots().map(
           (snap) {
             if (snap.exists) {
+              print(snap.data());
               return UserData(
-                doc: snap.data(),
-                id: snap.id,
-              );
+                  doc: snap.data(),
+                  id: snap.id,
+                  listTransactions: listTransactions);
             } else {
               return UserData.empty();
             }
@@ -61,6 +76,33 @@ class DatabaseService {
 
   Future<void> addTransaction({@required Map details}) async {
     transactionsCollection.add(details);
+  }
+
+  Future<void> deleteTransaction(String transactionId) async {
+    await transactionsCollection.doc(transactionId).delete();
+  }
+
+  Stream<List<PTransaction>> getPersonalTransactions(String uid) async* {
+    yield* userCollection
+        .doc(uid)
+        .collection('transactions')
+        .orderBy("date")
+        .snapshots()
+        .map((_personaltransactionListFromSnapshot));
+  }
+
+  Future<void> addPersonalTransaction(
+      {@required Map details, @required String uid}) async {
+    userCollection.doc(uid).collection('transactions').add(details);
+  }
+
+  Future<void> deletePersonalTransaction(
+      {@required String transactionId, @required String uid}) async {
+    await userCollection
+        .doc(uid)
+        .collection('transactions')
+        .doc(transactionId)
+        .delete();
   }
 
   Future<bool> isUserDocExists() async {

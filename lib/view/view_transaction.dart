@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:split_it/constants.dart';
-import 'package:split_it/view/create_personal.dart';
-import 'package:split_it/view/create_split.dart';
+import 'package:split_it/view/personal_transaction_page.dart';
+import 'package:split_it/view/split_transactions_page.dart';
 
-class CreateTransaction extends StatefulWidget {
-  const CreateTransaction({
+class ViewTransaction extends StatefulWidget {
+  const ViewTransaction({
     Key key,
   }) : super(key: key);
 
   @override
-  _CreateTransactionState createState() => _CreateTransactionState();
+  _ViewTransactionState createState() => _ViewTransactionState();
 }
 
-class _CreateTransactionState extends State<CreateTransaction> {
+class _ViewTransactionState extends State<ViewTransaction> {
   PageController pageController = PageController();
   int pageIndex = 0;
 
@@ -22,7 +21,7 @@ class _CreateTransactionState extends State<CreateTransaction> {
     double screenHeight = MediaQuery.of(context).size.height;
     return Container(
       height: screenHeight,
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
@@ -34,7 +33,7 @@ class _CreateTransactionState extends State<CreateTransaction> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Create New Transaction',
+            Text('View Transactions',
                 style: TextStyle(
                     color: kMidnight,
                     fontWeight: FontWeight.w600,
@@ -48,7 +47,6 @@ class _CreateTransactionState extends State<CreateTransaction> {
                 color: kMidnight,
                 borderRadius: BorderRadius.circular(5),
               ),
-              // padding: EdgeInsets.all(2),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -84,6 +82,8 @@ class _CreateTransactionState extends State<CreateTransaction> {
                       print(pageIndex);
                       pageController.jumpToPage(
                         1,
+                        // duration: Duration(milliseconds: 100),
+                        // curve: Curves.easeIn,
                       );
                     },
                     child: Container(
@@ -109,8 +109,8 @@ class _CreateTransactionState extends State<CreateTransaction> {
                 controller: pageController,
                 physics: NeverScrollableScrollPhysics(),
                 children: [
-                  CreateSplitTransaction(),
-                  CreatePersonalTransaction(),
+                  SplitTransactionPage(),
+                  PersonalTransactionPage(),
                 ],
               ),
             ),
@@ -119,16 +119,4 @@ class _CreateTransactionState extends State<CreateTransaction> {
       ),
     );
   }
-}
-
-void toast({String text}) {
-  Fluttertoast.showToast(
-    msg: text,
-    toastLength: Toast.LENGTH_LONG,
-    gravity: ToastGravity.BOTTOM,
-    timeInSecForIosWeb: 2,
-    backgroundColor: Colors.grey,
-    textColor: Colors.white,
-    fontSize: 16.0,
-  );
 }

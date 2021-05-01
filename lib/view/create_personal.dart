@@ -1,22 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:split_it/constants.dart';
+import 'package:split_it/database/database.dart';
+import 'package:split_it/models/personal_transaction.dart';
+import 'package:split_it/models/userData.dart';
 import 'package:split_it/widgets/custom_chip.dart';
 
-class PersonalTransaction extends StatefulWidget {
-  PersonalTransaction({Key key}) : super(key: key);
+class CreatePersonalTransaction extends StatefulWidget {
+  CreatePersonalTransaction({Key key}) : super(key: key);
 
   @override
-  PersonalTransactionState createState() => PersonalTransactionState();
+  CreatePersonalTransactionState createState() =>
+      CreatePersonalTransactionState();
 }
 
-class PersonalTransactionState extends State<PersonalTransaction> {
+class CreatePersonalTransactionState extends State<CreatePersonalTransaction> {
   int typeIndex = 0;
   List choices = ['Expense', 'Income'];
+
   TextEditingController titleCtrl = TextEditingController();
   TextEditingController descriptionCtrl = TextEditingController();
   TextEditingController amountCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    UserData userDoc = Provider.of<UserData>(context);
+
+    if (userDoc.isEmpty) return CircularProgressIndicator();
+
     return Container(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -67,26 +78,47 @@ class PersonalTransactionState extends State<PersonalTransaction> {
         Spacer(),
         Spacer(),
         Spacer(),
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  kBlue1,
-                  kBlue2,
-                ]),
-          ),
-          child: Text(
-            "SAVE",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
+        InkWell(
+          onTap: () async {
+            Map dataMap = PTransaction(
+              title: titleCtrl.text,
+              description: descriptionCtrl.text,
+              amount: double.parse(amountCtrl.text),
+              date: DateTime.now().millisecondsSinceEpoch,
+              isExpense: typeIndex == 0,
+            ).toMap();
+
+            await DatabaseService()
+                .addPersonalTransaction(details: dataMap, uid: userDoc.id);
+            toast(text: "Successfully Created");
+            titleCtrl.clear();
+            descriptionCtrl.clear();
+            amountCtrl.clear();
+            setState(() {
+              typeIndex = 0;
+            });
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    kBlue1,
+                    kBlue2,
+                  ]),
+            ),
+            child: Text(
+              "SAVE",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
@@ -129,4 +161,16 @@ class CustomTextField extends StatelessWidget {
       ),
     );
   }
+}
+
+void toast({String text}) {
+  Fluttertoast.showToast(
+    msg: text,
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.BOTTOM,
+    timeInSecForIosWeb: 2,
+    backgroundColor: Colors.grey,
+    textColor: Colors.white,
+    fontSize: 16.0,
+  );
 }
