@@ -64,125 +64,146 @@ class _OtpVerificationState extends State<OtpVerification> {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
 
-    return SafeArea(
-      child: Stack(
-        children: [
-          IgnorePointer(
-            ignoring: loading,
-            child: Opacity(
-              opacity: loading ? 0.6 : 1,
-              child: Scaffold(
-                appBar: AppBar(
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  leading: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: FittedBox(
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: Colors.blue,
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomCenter,
+              colors: [
+            kBlueDark,
+            kBlue1,
+          ])),
+      child: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            color: kGrey1,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+          ),
+          child: Stack(
+            children: [
+              IgnorePointer(
+                ignoring: loading,
+                child: Opacity(
+                  opacity: loading ? 0.6 : 1,
+                  child: Scaffold(
+                    appBar: AppBar(
+                      elevation: 0,
+                      backgroundColor: Colors.transparent,
+                      leading: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: FittedBox(
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Icon(
+                              Icons.arrow_back,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    backgroundColor: Colors.white,
+                    body: Container(
+                      height: screenHeight,
+                      width: screenWidth,
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24.0, vertical: 24),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Verify your OTP",
+                                    style: TextStyle(
+                                        color: kBlue2,
+                                        fontSize: 21,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(width: 10),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 25.0),
+                              child: otpFields(context),
+                            ),
+                            Builder(builder: (context) {
+                              return Center(
+                                child: RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                    text: "Didn't receive the OTP ? \n",
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: "Resend",
+                                        style: TextStyle(
+                                          color: timer != 0
+                                              ? Colors.grey.shade600
+                                              : kBlue2,
+                                          fontWeight: timer != 0
+                                              ? FontWeight.w500
+                                              : FontWeight.w800,
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () async {
+                                            if (timer == 0) {
+                                              setState(() {
+                                                loading = true;
+                                              });
+                                              await OTPService().sendOTP(
+                                                widget.phoneNumber,
+                                                context,
+                                                true,
+                                                stopLoading: () {
+                                                  setState(() {
+                                                    loading = false;
+                                                  });
+                                                },
+                                              );
+                                            }
+                                          },
+                                      ),
+                                      timer != 0
+                                          ? TextSpan(
+                                              text: " in $timer seconds",
+                                              style: TextStyle(
+                                                color:
+                                                    Colors.deepOrange.shade700,
+                                              ),
+                                            )
+                                          : TextSpan(),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                          ],
                         ),
                       ),
                     ),
                   ),
                 ),
-                backgroundColor: Colors.white,
-                body: Container(
-                  height: screenHeight,
-                  width: screenWidth,
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24.0, vertical: 24),
-                          child: Row(
-                            children: [
-                              Text(
-                                "Verify your OTP",
-                                style: TextStyle(
-                                    color: kBlue2,
-                                    fontSize: 21,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(width: 10),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: otpFields(context),
-                        ),
-                        Builder(builder: (context) {
-                          return Center(
-                            child: RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                text: "Didn't receive the OTP ? \n",
-                                style: TextStyle(
-                                  color: Colors.grey.shade600,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: "Resend",
-                                    style: TextStyle(
-                                      color: timer != 0
-                                          ? Colors.grey.shade600
-                                          : kBlue2,
-                                      fontWeight: timer != 0
-                                          ? FontWeight.w500
-                                          : FontWeight.w800,
-                                    ),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () async {
-                                        if (timer == 0) {
-                                          setState(() {
-                                            loading = true;
-                                          });
-                                          await OTPService().sendOTP(
-                                            widget.phoneNumber,
-                                            context,
-                                            true,
-                                            stopLoading: () {
-                                              setState(() {
-                                                loading = false;
-                                              });
-                                            },
-                                          );
-                                        }
-                                      },
-                                  ),
-                                  timer != 0
-                                      ? TextSpan(
-                                          text: " in $timer seconds",
-                                          style: TextStyle(
-                                            color: Colors.deepOrange.shade700,
-                                          ),
-                                        )
-                                      : TextSpan(),
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
-                      ],
-                    ),
-                  ),
-                ),
               ),
-            ),
+              loading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : SizedBox(),
+            ],
           ),
-          loading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : SizedBox(),
-        ],
+        ),
       ),
     );
   }

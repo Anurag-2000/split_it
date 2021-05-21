@@ -92,7 +92,7 @@ class _TransactionTileState extends State<TransactionTile> {
               widget.sTransaction.settleCount -
               1);
 
-      subTitle = 'Your are owed \u{20B9} ${owedAmount.toStringAsFixed(2)}';
+      subTitle = 'You are owed \u{20B9} ${owedAmount.toStringAsFixed(2)}';
     }
 
     return Dismissible(

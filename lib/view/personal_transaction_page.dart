@@ -137,7 +137,7 @@ class _PersonalTransactionTileState extends State<PersonalTransactionTile> {
                       ),
                     ),
                     SizedBox(height: 5),
-                    Text('${formattedDate}',
+                    Text('$formattedDate',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -267,6 +267,15 @@ class DeleteAlertDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+          child: Text(
+            "Cancel",
+            style: TextStyle(fontFamily: kFont1, fontSize: 16, color: kBlue1),
+          ),
+        ),
+        TextButton(
           onPressed: () async {
             await DatabaseService().deletePersonalTransaction(
                 uid: userId, transactionId: transactionId);
@@ -276,15 +285,6 @@ class DeleteAlertDialog extends StatelessWidget {
             "Delete",
             style: TextStyle(
                 fontFamily: kFont1, fontSize: 16, color: Colors.redAccent),
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context, false);
-          },
-          child: Text(
-            "Cancel",
-            style: TextStyle(fontFamily: kFont1, fontSize: 16, color: kBlue1),
           ),
         ),
       ],

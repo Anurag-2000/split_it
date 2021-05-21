@@ -19,38 +19,55 @@ class _ContactsPageState extends State<ContactsPage> {
       return CircularProgressIndicator();
     }
 
-    return SafeArea(
-      child: Container(
-        padding: EdgeInsets.all(15),
-        child: Center(
-            child: RefreshIndicator(
-          onRefresh: () async {
-            await contactsList.refresh();
-          },
-          child: Column(
-            children: [
-              Text('My Contacts',
-                  style: TextStyle(
-                      color: kMidnight,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 21)),
-              Expanded(
-                child: ListView(
-                  children: [
-                    ...contactsList.contacts.map((e) => ListTile(
-                          leading: Icon(
-                            Icons.person_outline,
-                            size: 30,
-                          ),
-                          title: Text(e.name),
-                          subtitle: Text(e.mobile),
-                        )),
-                  ],
-                ),
-              ),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomCenter,
+              colors: [
+            kBlueDark,
+            kBlue1,
+          ])),
+      child: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            color: kGrey1,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
           ),
-        )),
+          padding: EdgeInsets.all(15),
+          child: Center(
+              child: RefreshIndicator(
+            onRefresh: () async {
+              await contactsList.refresh();
+            },
+            child: Column(
+              children: [
+                Text('My Contacts',
+                    style: TextStyle(
+                        color: kMidnight,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 21)),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      ...contactsList.contacts.map((e) => ListTile(
+                            leading: Icon(
+                              Icons.person_outline,
+                              size: 30,
+                            ),
+                            title: Text(e.name),
+                            subtitle: Text(e.mobile),
+                          )),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )),
+        ),
       ),
     );
   }

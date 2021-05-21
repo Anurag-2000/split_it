@@ -3,6 +3,7 @@ import 'package:split_it/constants.dart';
 import 'package:split_it/view/contacts_page.dart';
 import 'package:split_it/view/create_transaction.dart';
 import 'package:split_it/view/home_page.dart';
+import 'package:split_it/view/profile_page.dart';
 import 'package:split_it/view/view_transaction.dart';
 
 class Dashboard extends StatefulWidget {
@@ -32,7 +33,7 @@ class _DashboardState extends State<Dashboard> {
       ContactsPage(),
       CreateTransaction(),
       ViewTransaction(),
-      Container(),
+      ProfilePage(),
     ];
   }
 

@@ -63,15 +63,15 @@ class CreatePersonalTransactionState extends State<CreatePersonalTransaction> {
             style: TextStyle(
                 color: kMidnight, fontSize: 18, fontWeight: FontWeight.w500)),
         CustomTextField(
-          titleCtrl: titleCtrl,
+          controller: titleCtrl,
           hintText: 'Title',
         ),
         CustomTextField(
-          titleCtrl: amountCtrl,
+          controller: amountCtrl,
           hintText: 'Amount',
         ),
         CustomTextField(
-          titleCtrl: descriptionCtrl,
+          controller: descriptionCtrl,
           hintText: 'Note',
           maxLines: 3,
         ),
@@ -130,20 +130,22 @@ class CreatePersonalTransactionState extends State<CreatePersonalTransaction> {
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
     Key key,
-    @required this.titleCtrl,
+    @required this.controller,
     @required this.hintText,
     this.maxLines,
+    this.color,
   }) : super(key: key);
 
-  final TextEditingController titleCtrl;
+  final TextEditingController controller;
   final String hintText;
   final int maxLines;
+  final Color color;
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       child: TextFormField(
-        controller: titleCtrl,
+        controller: controller,
         maxLines: maxLines,
         decoration: InputDecoration(
           hintText: hintText,
@@ -154,7 +156,7 @@ class CustomTextField extends StatelessWidget {
               OutlineInputBorder(borderSide: BorderSide(color: kNavy)),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: kNavy.withOpacity(0.6),
+              color: color ?? kNavy.withOpacity(0.6),
             ),
           ),
         ),
